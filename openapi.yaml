@@ -1,0 +1,637 @@
+openapi: 3.1.0
+info:
+  title: BellaVita API
+  version: 1.0.0
+  description: API documentation for BellaVita project
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: Users
+    description: User management
+  - name: Categories
+    description: Category management
+  - name: Products
+    description: Product management
+  - name: Orders
+    description: Order management
+  - name: Reviews
+    description: Review management
+  - name: Carts
+    description: Cart management
+  - name: AdminLogs
+    description: Admin log management
+paths:
+  /users:
+    get:
+      summary: Lấy tất cả user
+      tags: [Users]
+      responses:
+        "200":
+          description: Danh sách user
+    post:
+      summary: Tạo user mới
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                social_provider:
+                  type: string
+                status:
+                  type: boolean
+      responses:
+        "201":
+          description: User đã được tạo
+  /users/{id}:
+    get:
+      summary: Lấy user theo id
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Thông tin user
+        "404":
+          description: Không tìm thấy user
+    put:
+      summary: Cập nhật user
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                social_provider:
+                  type: string
+                status:
+                  type: boolean
+      responses:
+        "200":
+          description: User đã được cập nhật
+        "404":
+          description: Không tìm thấy user
+    delete:
+      summary: Xóa user
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User đã được xóa
+        "404":
+          description: Không tìm thấy user
+  /categories:
+    get:
+      summary: Lấy tất cả category
+      tags: [Categories]
+      responses:
+        "200":
+          description: Danh sách category
+    post:
+      summary: Tạo category mới
+      tags: [Categories]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+      responses:
+        "201":
+          description: Category đã được tạo
+  /categories/{id}:
+    get:
+      summary: Lấy category theo id
+      tags: [Categories]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Thông tin category
+        "404":
+          description: Không tìm thấy category
+    put:
+      summary: Cập nhật category
+      tags: [Categories]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+      responses:
+        "200":
+          description: Category đã được cập nhật
+        "404":
+          description: Không tìm thấy category
+      delete:
+        summary: Xóa category
+        tags: [Categories]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: Category đã được xóa
+          "404":
+            description: Không tìm thấy category
+  /products:
+    get:
+      summary: Lấy tất cả sản phẩm
+      tags: [Products]
+      responses:
+        "200":
+          description: Danh sách sản phẩm
+    post:
+      summary: Tạo sản phẩm mới
+      tags: [Products]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                brand:
+                  type: string
+                skin_type:
+                  type: string
+                image_url:
+                  type: string
+                stock_quantity:
+                  type: integer
+                category_id:
+                  type: integer
+                barcode:
+                  type: string
+      responses:
+        "201":
+          description: Sản phẩm đã được tạo
+  /products/{id}:
+    get:
+      summary: Lấy sản phẩm theo id
+      tags: [Products]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Thông tin sản phẩm
+        "404":
+          description: Không tìm thấy sản phẩm
+    put:
+      summary: Cập nhật sản phẩm
+      tags: [Products]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                brand:
+                  type: string
+                skin_type:
+                  type: string
+                image_url:
+                  type: string
+                stock_quantity:
+                  type: integer
+                category_id:
+                  type: integer
+                barcode:
+                  type: string
+      responses:
+        "200":
+          description: Sản phẩm đã được cập nhật
+        "404":
+          description: Không tìm thấy sản phẩm
+    delete:
+      summary: Xóa sản phẩm
+      tags: [Products]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Sản phẩm đã được xóa
+        "404":
+          description: Không tìm thấy sản phẩm
+  /orders:
+    get:
+      summary: Lấy tất cả đơn hàng
+      tags: [Orders]
+      responses:
+        "200":
+          description: Danh sách đơn hàng
+    post:
+      summary: Tạo đơn hàng mới
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                status:
+                  type: boolean
+                payment_method:
+                  type: string
+                total_amount:
+                  type: number
+                  format: float
+      responses:
+        "201":
+          description: Đơn hàng đã được tạo
+  /orders/{id}:
+    get:
+      summary: Lấy đơn hàng theo id
+      tags: [Orders]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Thông tin đơn hàng
+        "404":
+          description: Không tìm thấy đơn hàng
+    put:
+      summary: Cập nhật đơn hàng
+      tags: [Orders]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                status:
+                  type: boolean
+                payment_method:
+                  type: string
+                total_amount:
+                  type: number
+                  format: float
+      responses:
+        "200":
+          description: Đơn hàng đã được cập nhật
+        "404":
+          description: Không tìm thấy đơn hàng
+    delete:
+      summary: Xóa đơn hàng
+      tags: [Orders]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Đơn hàng đã được xóa
+        "404":
+          description: Không tìm thấy đơn hàng
+  /reviews:
+    get:
+      summary: Lấy tất cả review
+      tags: [Reviews]
+      responses:
+        "200":
+          description: Danh sách review
+    post:
+      summary: Tạo review mới
+      tags: [Reviews]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                product_id:
+                  type: integer
+                rating:
+                  type: integer
+                comment:
+                  type: string
+      responses:
+        "201":
+          description: Review đã được tạo
+  /reviews/{id}:
+    get:
+      summary: Lấy review theo id
+      tags: [Reviews]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Thông tin review
+        "404":
+          description: Không tìm thấy review
+    put:
+      summary: Cập nhật review
+      tags: [Reviews]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                product_id:
+                  type: integer
+                rating:
+                  type: integer
+                comment:
+                  type: string
+      responses:
+        "200":
+          description: Review đã được cập nhật
+        "404":
+          description: Không tìm thấy review
+    delete:
+      summary: Xóa review
+      tags: [Reviews]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Review đã được xóa
+        "404":
+          description: Không tìm thấy review
+  /carts:
+    get:
+      summary: Lấy tất cả cart
+      tags: [Carts]
+      responses:
+        "200":
+          description: Danh sách cart
+    post:
+      summary: Tạo cart mới
+      tags: [Carts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                status:
+                  type: boolean
+      responses:
+        "201":
+          description: Cart đã được tạo
+  /carts/{id}:
+    get:
+      summary: Lấy cart theo id
+      tags: [Carts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Thông tin cart
+        "404":
+          description: Không tìm thấy cart
+    put:
+      summary: Cập nhật cart
+      tags: [Carts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                status:
+                  type: boolean
+      responses:
+        "200":
+          description: Cart đã được cập nhật
+        "404":
+          description: Không tìm thấy cart
+    delete:
+      summary: Xóa cart
+      tags: [Carts]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cart đã được xóa
+        "404":
+          description: Không tìm thấy cart
+  /admin-logs:
+    get:
+      summary: Lấy tất cả admin log
+      tags: [AdminLogs]
+      responses:
+        "200":
+          description: Danh sách admin log
+    post:
+      summary: Tạo admin log mới
+      tags: [AdminLogs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                admin_id:
+                  type: integer
+                action_type:
+                  type: string
+                details:
+                  type: string
+      responses:
+        "201":
+          description: Admin log đã được tạo
+  /admin-logs/{id}:
+    get:
+      summary: Lấy admin log theo id
+      tags: [AdminLogs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Thông tin admin log
+        "404":
+          description: Không tìm thấy admin log
+    put:
+      summary: Cập nhật admin log
+      tags: [AdminLogs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                admin_id:
+                  type: integer
+                action_type:
+                  type: string
+                details:
+                  type: string
+      responses:
+        "200":
+          description: Admin log đã được cập nhật
+        "404":
+          description: Không tìm thấy admin log
+    delete:
+      summary: Xóa admin log
+      tags: [AdminLogs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Admin log đã được xóa
+        "404":
+          description: Không tìm thấy admin log
