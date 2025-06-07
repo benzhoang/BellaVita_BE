@@ -68,6 +68,8 @@ paths:
     post:
       summary: Tạo user mới
       tags: [Users]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -94,6 +96,8 @@ paths:
     get:
       summary: Lấy user theo id
       tags: [Users]
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -108,6 +112,8 @@ paths:
     put:
       summary: Cập nhật user
       tags: [Users]
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -141,6 +147,8 @@ paths:
     delete:
       summary: Xóa user
       tags: [Users]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -156,12 +164,16 @@ paths:
     get:
       summary: Lấy tất cả category
       tags: [Categories]
+      security:
+        - bearerAuth: []  
       responses:
         "200":
           description: Danh sách category
     post:
       summary: Tạo category mới
       tags: [Categories]
+      security:
+        - bearerAuth: []  
       requestBody:
         required: true
         content:
@@ -180,6 +192,8 @@ paths:
     get:
       summary: Lấy category theo id
       tags: [Categories]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -194,6 +208,8 @@ paths:
     put:
       summary: Cập nhật category
       tags: [Categories]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -216,16 +232,18 @@ paths:
           description: Category đã được cập nhật
         "404":
           description: Không tìm thấy category
-      delete:
-        summary: Xóa category
-        tags: [Categories]
-        parameters:
+    delete:
+      summary: Xóa category
+      tags: [Categories]
+      security:
+        - bearerAuth: []  
+      parameters:
           - in: path
             name: id
             required: true
             schema:
               type: integer
-        responses:
+      responses:
           "200":
             description: Category đã được xóa
           "404":
@@ -234,12 +252,16 @@ paths:
     get:
       summary: Lấy tất cả sản phẩm
       tags: [Products]
+      security:
+        - bearerAuth: []  
       responses:
         "200":
           description: Danh sách sản phẩm
     post:
       summary: Tạo sản phẩm mới
       tags: [Products]
+      security:
+        - bearerAuth: []  
       requestBody:
         required: true
         content:
@@ -273,6 +295,8 @@ paths:
     get:
       summary: Lấy sản phẩm theo id
       tags: [Products]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -287,6 +311,8 @@ paths:
     put:
       summary: Cập nhật sản phẩm
       tags: [Products]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -327,6 +353,8 @@ paths:
     delete:
       summary: Xóa sản phẩm
       tags: [Products]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -342,12 +370,16 @@ paths:
     get:
       summary: Lấy tất cả đơn hàng
       tags: [Orders]
+      security:
+        - bearerAuth: []  
       responses:
         "200":
           description: Danh sách đơn hàng
     post:
       summary: Tạo đơn hàng mới
       tags: [Orders]
+      security:
+        - bearerAuth: []  
       requestBody:
         required: true
         content:
@@ -371,6 +403,8 @@ paths:
     get:
       summary: Lấy đơn hàng theo id
       tags: [Orders]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -385,6 +419,8 @@ paths:
     put:
       summary: Cập nhật đơn hàng
       tags: [Orders]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -415,6 +451,8 @@ paths:
     delete:
       summary: Xóa đơn hàng
       tags: [Orders]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -430,12 +468,16 @@ paths:
     get:
       summary: Lấy tất cả review
       tags: [Reviews]
+      security:
+        - bearerAuth: []  
       responses:
         "200":
           description: Danh sách review
     post:
       summary: Tạo review mới
       tags: [Reviews]
+      security:
+        - bearerAuth: []  
       requestBody:
         required: true
         content:
@@ -458,6 +500,8 @@ paths:
     get:
       summary: Lấy review theo id
       tags: [Reviews]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -472,6 +516,8 @@ paths:
     put:
       summary: Cập nhật review
       tags: [Reviews]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -501,6 +547,8 @@ paths:
     delete:
       summary: Xóa review
       tags: [Reviews]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -516,12 +564,16 @@ paths:
     get:
       summary: Lấy tất cả cart
       tags: [Carts]
+      security:
+        - bearerAuth: []  
       responses:
         "200":
           description: Danh sách cart
     post:
       summary: Tạo cart mới
       tags: [Carts]
+      security:
+        - bearerAuth: []  
       requestBody:
         required: true
         content:
@@ -540,6 +592,8 @@ paths:
     get:
       summary: Lấy cart theo id
       tags: [Carts]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -554,6 +608,8 @@ paths:
     put:
       summary: Cập nhật cart
       tags: [Carts]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -579,6 +635,8 @@ paths:
     delete:
       summary: Xóa cart
       tags: [Carts]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -594,12 +652,16 @@ paths:
     get:
       summary: Lấy tất cả admin log
       tags: [AdminLogs]
+      security:
+        - bearerAuth: []  
       responses:
         "200":
           description: Danh sách admin log
     post:
       summary: Tạo admin log mới
       tags: [AdminLogs]
+      security:
+        - bearerAuth: []  
       requestBody:
         required: true
         content:
@@ -620,6 +682,8 @@ paths:
     get:
       summary: Lấy admin log theo id
       tags: [AdminLogs]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -634,6 +698,8 @@ paths:
     put:
       summary: Cập nhật admin log
       tags: [AdminLogs]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id
@@ -661,6 +727,8 @@ paths:
     delete:
       summary: Xóa admin log
       tags: [AdminLogs]
+      security:
+        - bearerAuth: []  
       parameters:
         - in: path
           name: id

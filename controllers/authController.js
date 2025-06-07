@@ -8,10 +8,10 @@ const AuthController = {
     const { email, password } = req.body;
     try {
       const user = await User.findOne({ where: { email } });
-      if (!user) return res.status(401).json({ message: 'Sai tài khoản hoặc mật khẩu' });
+      if (!user) return res.status(401).json({ message: 'Sai tài khoản' });
 
       const valid = await bcrypt.compare(password, user.password);
-      if (!valid) return res.status(401).json({ message: 'Sai tài khoản hoặc mật khẩu' });
+      if (!valid) return res.status(401).json({ message: 'Sai mật khẩu' });
 
       const token = jwt.sign(
         { id: user.id, role: user.role },

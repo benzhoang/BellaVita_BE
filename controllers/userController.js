@@ -24,12 +24,21 @@ const UserController = {
 
   // Tạo user mới
   createUser: async (req, res) => {
-    try {
-      const user = await User.create(req.body);
-      res.status(201).json(user);
-    } catch (err) {
-      res.status(400).json({ error: err.message });
+  try {
+    const { email, password, ...rest } = req.body;
+    // Kiểm tra email đã tồn tại chưa
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email đã tồn tại' });
     }
+    // Hash password (nếu có)
+    const bcrypt = require('bcryptjs');
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({ ...rest, email, password: hashedPassword });
+    res.status(201).json(user);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
   },
 
   // Cập nhật user
