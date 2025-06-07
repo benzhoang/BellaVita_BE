@@ -23,9 +23,16 @@ const UserController = {
   },
 
   // Tạo user mới
-  createUser: async (req, res) => {
+createUser: async (req, res) => {
   try {
-    const { email, password, ...rest } = req.body;
+    const { email, password, role, ...rest } = req.body;
+
+    // Kiểm tra role hợp lệ
+    const validRoles = ['customer', 'manager', 'admin', 'staff'];
+    if (role && !validRoles.includes(role)) {
+      return res.status(400).json({ error: 'Role không hợp lệ' });
+    }
+
     // Kiểm tra email đã tồn tại chưa
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -34,12 +41,12 @@ const UserController = {
     // Hash password (nếu có)
     const bcrypt = require('bcryptjs');
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ ...rest, email, password: hashedPassword });
+    const user = await User.create({ ...rest, email, password: hashedPassword, role });
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-  },
+},
 
   // Cập nhật user
   updateUser: async (req, res) => {
@@ -58,6 +65,20 @@ const UserController = {
     try {
       const user = await User.findByPk(req.params.id);
       if (!user) return res.status(404).json({ error: 'User not found' });
+
+      // Kiểm tra user có liên quan đến các bảng khác không (ví dụ: orders, carts, reviews)
+      const Order = require('../models/orderModel');
+      const Cart = require('../models/cartModel');
+      const Review = require('../models/reviewModel');
+
+      const hasOrder = await Order.findOne({ where: { user_id: user.user_id } });
+      const hasCart = await Cart.findOne({ where: { user_id: user.user_id } });
+      const hasReview = await Review.findOne({ where: { user_id: user.user_id } });
+
+      if (hasOrder || hasCart || hasReview) {
+        return res.status(400).json({ error: 'Không thể xóa user vì còn liên kết với dữ liệu khác (hóa đơn, giỏ hàng, đánh giá, ...)' });
+      }
+
       await user.destroy();
       res.json({ message: 'User deleted' });
     } catch (err) {

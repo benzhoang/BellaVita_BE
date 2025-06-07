@@ -1,11 +1,19 @@
 const Order = require('../models/orderModel');
+const OrderItem = require('../models/orderItemModel');
 
 const OrderController = {
   // Lấy tất cả đơn hàng
   getAllOrders: async (req, res) => {
     try {
       const orders = await Order.findAll();
-      res.json(orders);
+      // Lấy orderItems cho từng order
+      const ordersWithItems = await Promise.all(
+        orders.map(async (order) => {
+          const orderItems = await OrderItem.findAll({ where: { order_id: order.order_id } });
+          return { ...order.toJSON(), orderItems };
+        })
+      );
+      res.json(ordersWithItems);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -16,7 +24,11 @@ const OrderController = {
     try {
       const order = await Order.findByPk(req.params.id);
       if (!order) return res.status(404).json({ error: 'Order not found' });
-      res.json(order);
+
+      // Lấy các order item theo order_id
+      const orderItems = await OrderItem.findAll({ where: { order_id: order.order_id } });
+
+      res.json({ ...order.toJSON(), orderItems });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

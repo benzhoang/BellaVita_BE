@@ -1,22 +1,30 @@
 const Cart = require('../models/cartModel');
+const CartItem = require('../models/cartItemModel');
 
 const CartController = {
-  // Lấy tất cả cart
+  // Lấy tất cả cart kèm cart item
   getAllCarts: async (req, res) => {
     try {
       const carts = await Cart.findAll();
-      res.json(carts);
+      const cartsWithItems = await Promise.all(
+        carts.map(async (cart) => {
+          const cartItems = await CartItem.findAll({ where: { cart_id: cart.cart_id } });
+          return { ...cart.toJSON(), cartItems };
+        })
+      );
+      res.json(cartsWithItems);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
 
-  // Lấy cart theo id
+  // Lấy cart theo id kèm cart item
   getCartById: async (req, res) => {
     try {
       const cart = await Cart.findByPk(req.params.id);
       if (!cart) return res.status(404).json({ error: 'Cart not found' });
-      res.json(cart);
+      const cartItems = await CartItem.findAll({ where: { cart_id: cart.cart_id } });
+      res.json({ ...cart.toJSON(), cartItems });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

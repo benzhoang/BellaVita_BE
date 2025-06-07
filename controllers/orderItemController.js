@@ -2,14 +2,21 @@ const OrderItem = require('../models/orderItemModel');
 
 const OrderItemController = {
   // Lấy tất cả order item
-  getAllOrderItems: async (req, res) => {
-    try {
-      const orderItems = await OrderItem.findAll();
-      res.json(orderItems);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+getAllOrderItems: async (req, res) => {
+  try {
+    // Lấy order_id từ query hoặc params (ví dụ: /order-items?order_id=123)
+    const { order_id } = req.query;
+    let orderItems;
+    if (order_id) {
+      orderItems = await OrderItem.findAll({ where: { order_id } });
+    } else {
+      orderItems = await OrderItem.findAll();
     }
-  },
+    res.json(orderItems);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+},
 
   // Lấy order item theo id
   getOrderItemById: async (req, res) => {
