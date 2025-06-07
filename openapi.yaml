@@ -3,8 +3,7 @@ info:
   title: BellaVita API
   version: 1.0.0
   description: API documentation for BellaVita project
-servers:
-  - url: http://localhost:3000
+servers: []
 tags:
   - name: Auth
     description: Auth management
