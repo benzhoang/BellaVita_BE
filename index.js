@@ -21,8 +21,11 @@ const authRoutes = require('./routes/authRoute');
 // const models = require('./models/associations');
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+// Cấu hình Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Cấu hình các route
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/categories', categoryRoutes);
