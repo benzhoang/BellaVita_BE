@@ -49,6 +49,17 @@ app.use('/admin-logs', adminLogRoute);
 // Kiểm tra associations khi khởi động server
 // checkAssociations();
 
+
+// Route giới thiệu về BE server và link Swagger
+app.get('/', (req, res) => {
+  const host = req.headers.host;
+  res.send(`
+    <h2>💄 BellaVita Backend API Server</h2>
+    <p>Chào mừng bạn đến với hệ thống API cho BellaVita.</p>
+    <p>Xem tài liệu Swagger tại: <a href="http://${host}/api-docs">http://${host}/api-docs</a></p>
+  `);
+});
+
 // Đồng bộ DB (chỉ nên dùng khi phát triển)
 sequelize.sync().then(() => {
   const port = process.env.PORT || 3000;
