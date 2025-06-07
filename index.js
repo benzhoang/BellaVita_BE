@@ -14,12 +14,14 @@ const cartRoutes = require('./routes/cartRoute');
 const cartItemRoutes = require('./routes/cartItemRoute');
 const reviewRoutes = require('./routes/reviewRoute');
 const adminLogRoute = require('./routes/adminLogRoute');
+const authRoutes = require('./routes/authRoute');
 
 // Thiết lập associations
 // const models = require('./models/associations');
 
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/products', productRoutes);
