@@ -1,67 +1,113 @@
 const OrderItem = require('../models/orderItemModel');
+const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
 
-const OrderItemController = {
-  // Lấy tất cả order item
-getAllOrderItems: async (req, res) => {
-  try {
-    // Lấy order_id từ query hoặc params (ví dụ: /order-items?order_id=123)
-    const { order_id } = req.query;
-    let orderItems;
-    if (order_id) {
-      orderItems = await OrderItem.findAll({ where: { order_id } });
-    } else {
-      orderItems = await OrderItem.findAll();
-    }
-    res.json(orderItems);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-},
-
-  // Lấy order item theo id
-  getOrderItemById: async (req, res) => {
+const OrderItemsController = {
+  // Lấy tất cả order items theo order_id (chỉ cho phép chủ sở hữu order)
+  getByOrderId: async (req, res) => {
+    const { order_id } = req.params;
+    const userId = req.user?.id;
     try {
-      const orderItem = await OrderItem.findByPk(req.params.id);
-      if (!orderItem) return res.status(404).json({ error: 'Order item not found' });
-      res.json(orderItem);
+      const order = await Order.findByPk(order_id);
+      if (!order) {
+        return res.status(404).json({ message: 'Order không tồn tại' });
+      }
+      if (order.user_id !== userId) {
+        return res.status(403).json({ message: 'Bạn không có quyền truy cập order này' });
+      }
+      const items = await OrderItem.findAll({ where: { order_id } });
+      res.json(items);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
 
-  // Tạo order item mới
-  createOrderItem: async (req, res) => {
+  // Thêm order item mới (chỉ cho phép chủ sở hữu order)
+  create: async (req, res) => {
+    const { order_id, product_id, quantity } = req.body;
+    const userId = req.user?.id;
     try {
-      const orderItem = await OrderItem.create(req.body);
-      res.status(201).json(orderItem);
+      const order = await Order.findByPk(order_id);
+      if (!order) {
+        return res.status(400).json({ message: 'Order không tồn tại' });
+      }
+      if (order.user_id !== userId) {
+        return res.status(403).json({ message: 'Bạn không có quyền thêm vào order này' });
+      }
+      const product = await Product.findByPk(product_id);
+      if (!product) {
+        return res.status(400).json({ message: 'Sản phẩm không tồn tại' });
+      }
+      const newItem = await OrderItem.create({ order_id, product_id, quantity });
+      res.status(201).json(newItem);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
   },
 
-  // Cập nhật order item
-  updateOrderItem: async (req, res) => {
+  // Sửa order item (chỉ cho phép chủ sở hữu order)
+  update: async (req, res) => {
+    const { item_id } = req.params;
+    const { order_id, product_id, quantity } = req.body;
+    const userId = req.user?.id;
     try {
-      const orderItem = await OrderItem.findByPk(req.params.id);
-      if (!orderItem) return res.status(404).json({ error: 'Order item not found' });
-      await orderItem.update(req.body);
-      res.json(orderItem);
+      const item = await OrderItem.findByPk(item_id);
+      if (!item) {
+        return res.status(404).json({ message: 'Order item không tồn tại' });
+      }
+      const order = await Order.findByPk(item.order_id);
+      if (!order || order.user_id !== userId) {
+        return res.status(403).json({ message: 'Bạn không có quyền sửa order item này' });
+      }
+      if (order_id && order_id !== item.order_id) {
+        const newOrder = await Order.findByPk(order_id);
+        if (!newOrder) {
+          return res.status(400).json({ message: 'Order không tồn tại' });
+        }
+        if (newOrder.user_id !== userId) {
+          return res.status(403).json({ message: 'Bạn không có quyền chuyển order item sang order này' });
+        }
+      }
+      if (product_id) {
+        const product = await Product.findByPk(product_id);
+        if (!product) {
+          return res.status(400).json({ message: 'Sản phẩm không tồn tại' });
+        }
+      }
+      await OrderItem.update(
+        {
+          order_id: order_id || item.order_id,
+          product_id: product_id || item.product_id,
+          quantity
+        },
+        { where: { item_id } }
+      );
+      const updatedItem = await OrderItem.findByPk(item_id);
+      res.json(updatedItem);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
   },
 
-  // Xóa order item
-  deleteOrderItem: async (req, res) => {
+  // Xóa order item (chỉ cho phép chủ sở hữu order)
+  delete: async (req, res) => {
+    const { item_id } = req.params;
+    const userId = req.user?.id;
     try {
-      const orderItem = await OrderItem.findByPk(req.params.id);
-      if (!orderItem) return res.status(404).json({ error: 'Order item not found' });
-      await orderItem.destroy();
-      res.json({ message: 'Order item deleted' });
+      const item = await OrderItem.findByPk(item_id);
+      if (!item) {
+        return res.status(404).json({ message: 'Order item không tồn tại' });
+      }
+      const order = await Order.findByPk(item.order_id);
+      if (!order || order.user_id !== userId) {
+        return res.status(403).json({ message: 'Bạn không có quyền xóa order item này' });
+      }
+      await OrderItem.destroy({ where: { item_id } });
+      res.json({ message: 'Đã xóa thành công' });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
 };
 
-module.exports = OrderItemController;
+module.exports = OrderItemsController;

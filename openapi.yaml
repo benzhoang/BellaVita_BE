@@ -487,6 +487,88 @@ paths:
           description: Đơn hàng đã được xóa
         "404":
           description: Không tìm thấy đơn hàng
+  /api/orders/order-items:
+    get:
+      summary: Lấy tất cả order items
+      tags: [Orders]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Danh sách order items
+    post:
+      summary: Tạo order item mới
+      tags: [Orders]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  type: integer
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+                price:
+                  type: number
+                  format: float
+      responses:
+        "201":
+          description: Order item đã được tạo
+  /api/orders/order-items/{id}:
+    put:
+      summary: Cập nhật order item
+      tags: [Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  type: integer
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+                price:
+                  type: number
+                  format: float
+      responses:
+        "200":
+          description: Order item đã được cập nhật
+        "404":
+          description: Không tìm thấy order item
+    delete:
+      summary: Xóa order item
+      tags: [Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order item đã được xóa
+        "404":
+          description: Không tìm thấy order item
   /api/reviews:
     get:
       summary: Lấy tất cả review
@@ -671,6 +753,82 @@ paths:
           description: Cart đã được xóa
         "404":
           description: Không tìm thấy cart
+  /api/carts/cart-items:
+    get:
+      summary: Lấy tất cả cart items
+      tags: [Carts]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Danh sách cart items
+    post:
+      summary: Tạo cart item mới
+      tags: [Carts]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  type: integer
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        "201":
+          description: Cart item đã được tạo
+  /api/carts/cart-items/{id}:
+    put:
+      summary: Cập nhật cart item
+      tags: [Carts]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  type: integer
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        "200":
+          description: Cart item đã được cập nhật
+        "404":
+          description: Không tìm thấy cart item
+    delete:
+      summary: Xóa cart item
+      tags: [Carts]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cart item đã được xóa
+        "404":
+          description: Không tìm thấy cart item
   /api/admin-logs:
     get:
       summary: Lấy tất cả admin log
@@ -763,3 +921,4 @@ paths:
           description: Admin log đã được xóa
         "404":
           description: Không tìm thấy admin log
+  
