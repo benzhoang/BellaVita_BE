@@ -22,6 +22,26 @@ const AuthController = {
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
+  },
+  // Đăng kí
+  register: async (req, res) => {
+    const { email, password, name, role } = req.body;
+    try {
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email đã tồn tại' });
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = await User.create({
+        email,
+        password: hashedPassword,
+        name,
+        role: role || 'user'
+      });
+      res.status(201).json({ message: 'Đăng ký thành công', user: { id: newUser.id, email: newUser.email, name: newUser.name, role: newUser.role } });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 

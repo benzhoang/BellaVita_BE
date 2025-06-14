@@ -26,16 +26,16 @@ app.use(cors());
 // Cấu hình Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Cấu hình các route
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/categories', categoryRoutes);
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
-app.use('/order-items', orderItemRoutes);
-app.use('/carts', cartRoutes);
-app.use('/cart-items', cartItemRoutes);
-app.use('/reviews', reviewRoutes);
-app.use('/admin-logs', adminLogRoute);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/order-items', orderItemRoutes);
+app.use('/api/carts', cartRoutes);
+app.use('/api/cart-items', cartItemRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin-logs', adminLogRoute);
 
 // Route giới thiệu về BE server và link Swagger
 app.get('/', (req, res) => {
