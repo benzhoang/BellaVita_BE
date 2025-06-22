@@ -54,7 +54,7 @@ const PaymentController = {
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
 
-      const { orderId, amount, bankCode, orderDescription, orderType, language } = req.body;
+      const { orderId, bankCode, orderDescription, orderType, language } = req.body;
 
       if (!orderId) {
         return res.status(400).json({ success: false, error: 'Order ID is required' });
@@ -62,11 +62,26 @@ const PaymentController = {
 
       console.log('=== TẠO URL THANH TOÁN VNPAY ===');
       console.log('Order ID:', orderId);
-      console.log('Amount:', amount);
       console.log('Bank Code:', bankCode);
       console.log('IP Address:', ipAddr);
 
-      // 1. Tạo một bản ghi thanh toán mới trong CSDL với trạng thái chờ
+      // 1. Lấy thông tin order từ database
+      const order = await Order.findByPk(orderId);
+      if (!order) {
+        return res.status(404).json({ success: false, error: 'Order not found' });
+      }
+
+      // 2. Kiểm tra order đã thanh toán chưa
+      if (order.status === true) {
+        return res.status(400).json({ success: false, error: 'Order has already been paid' });
+      }
+
+      // 3. Lấy amount từ order
+      const amount = order.total_amount;
+      console.log('Order Amount:', amount);
+      console.log('Order Status:', order.status);
+
+      // 4. Tạo một bản ghi thanh toán mới trong CSDL với trạng thái chờ
       const newPayment = await Payment.create({
         order_id: orderId,
         method: 'VNPAY',
@@ -122,11 +137,16 @@ const PaymentController = {
       console.log('  - Transaction ID:', paymentId);
       console.log('  - Create Date:', createDate);
       console.log('  - Return URL:', vnpReturnUrl);
+      console.log('  - Amount from Order:', amount);
+      console.log('  - VNPAY Amount (x100):', Math.round(amount * 100));
       console.log('=== HOÀN THÀNH TẠO URL THANH TOÁN ===\n');
 
       res.json({
         success: true,
-        paymentUrl: finalUrl
+        paymentUrl: finalUrl,
+        paymentId: paymentId,
+        orderId: orderId,
+        amount: amount
       });
       
     } catch (error) {
