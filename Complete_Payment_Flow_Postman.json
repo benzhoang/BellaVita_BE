@@ -1,0 +1,288 @@
+{
+	"info": {
+		"_postman_id": "complete-payment-flow",
+		"name": "Complete Payment Flow - BellaVita",
+		"description": "Hướng dẫn test toàn bộ quy trình từ tạo order đến thanh toán VNPAY",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Đăng nhập để lấy token. Thay đổi email và password theo user thực tế của bạn."
+					},
+					"response": []
+				}
+			],
+			"description": "Bước 1: Đăng nhập để lấy access token"
+		},
+		{
+			"name": "2. Create Order with Items",
+			"item": [
+				{
+					"name": "Create Order with Items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": 1,\n  \"status\": false,\n  \"payment_method\": \"VNPAY\",\n  \"orderItems\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"price\": 50000\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 1,\n      \"price\": 50000\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Tạo đơn hàng mới cùng với các sản phẩm. Hệ thống sẽ tự động tính tổng tiền và tạo order items. Lưu ý order_id trong response."
+					},
+					"response": []
+				}
+			],
+			"description": "Bước 2: Tạo đơn hàng mới cùng với các sản phẩm"
+		},
+		{
+			"name": "3. Verify Order",
+			"item": [
+				{
+					"name": "Get Order Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/{{orderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{orderId}}"
+							]
+						},
+						"description": "Kiểm tra chi tiết đơn hàng và các sản phẩm đã được tạo"
+					},
+					"response": []
+				}
+			],
+			"description": "Bước 3: Kiểm tra đơn hàng đã tạo"
+		},
+		{
+			"name": "4. Create Payment URL",
+			"item": [
+				{
+					"name": "Create VNPAY Payment URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"amount\": 150000,\n  \"bankCode\": \"VNPAYQR\",\n  \"orderDescription\": \"Thanh toan don hang {{orderId}}\",\n  \"orderType\": \"billpayment\",\n  \"language\": \"vn\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/payment/create_payment_url",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment",
+								"create_payment_url"
+							]
+						},
+						"description": "Tạo URL thanh toán VNPAY. Copy paymentUrl từ response để test thanh toán. Amount sẽ là tổng tiền của order (150,000 VND = 2x50,000 + 1x50,000)."
+					},
+					"response": []
+				}
+			],
+			"description": "Bước 4: Tạo URL thanh toán VNPAY"
+		},
+		{
+			"name": "5. Test Payment Return",
+			"item": [
+				{
+					"name": "Simulate VNPAY Success Return",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/payment/vnpay_return?vnp_Amount=15000000&vnp_BankCode=VNPAYQR&vnp_BankTranNo=VNPAY123456&vnp_CardType=QR&vnp_OrderInfo=Thanh+toan+don+hang+{{orderId}}&vnp_PayDate=20241221143000&vnp_ResponseCode=00&vnp_TmnCode={{vnpayTmnCode}}&vnp_TransactionNo=12345678&vnp_TransactionStatus=00&vnp_TxnRef={{paymentId}}&vnp_SecureHash={{secureHash}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment",
+								"vnpay_return"
+							],
+							"query": [
+								{
+									"key": "vnp_Amount",
+									"value": "15000000"
+								},
+								{
+									"key": "vnp_BankCode",
+									"value": "VNPAYQR"
+								},
+								{
+									"key": "vnp_BankTranNo",
+									"value": "VNPAY123456"
+								},
+								{
+									"key": "vnp_CardType",
+									"value": "QR"
+								},
+								{
+									"key": "vnp_OrderInfo",
+									"value": "Thanh toan don hang {{orderId}}"
+								},
+								{
+									"key": "vnp_PayDate",
+									"value": "20241221143000"
+								},
+								{
+									"key": "vnp_ResponseCode",
+									"value": "00"
+								},
+								{
+									"key": "vnp_TransactionNo",
+									"value": "12345678"
+								},
+								{
+									"key": "vnp_TransactionStatus",
+									"value": "00"
+								},
+								{
+									"key": "vnp_TxnRef",
+									"value": "{{paymentId}}"
+								},
+								{
+									"key": "vnp_SecureHash",
+									"value": "{{secureHash}}"
+								}
+							]
+						},
+						"description": "Mô phỏng callback thành công từ VNPAY. Lưu ý: vnp_Amount = 15000000 (150,000 VND x 100), secureHash cần được tính toán đúng."
+					},
+					"response": []
+				}
+			],
+			"description": "Bước 5: Test callback từ VNPAY (thành công)"
+		},
+		{
+			"name": "6. Verify Payment Status",
+			"item": [
+				{
+					"name": "Check Payment Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/payment/{{paymentId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment",
+								"{{paymentId}}"
+							]
+						},
+						"description": "Kiểm tra trạng thái thanh toán sau khi VNPAY callback"
+					},
+					"response": []
+				}
+			],
+			"description": "Bước 6: Kiểm tra trạng thái thanh toán"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "your_access_token_here",
+			"type": "string"
+		},
+		{
+			"key": "orderId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "paymentId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "vnpayTmnCode",
+			"value": "your_tmn_code_here",
+			"type": "string"
+		},
+		{
+			"key": "secureHash",
+			"value": "calculated_secure_hash_here",
+			"type": "string"
+		}
+	]
+} 
