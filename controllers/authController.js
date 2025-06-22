@@ -18,7 +18,7 @@ const AuthController = {
         process.env.JWT_SECRET || 'secret_key',
         { expiresIn: '1d' }
       );
-      res.json({ userName: user.name, userRole: user.role, token });
+      res.json({ userId: user.user_id, userName: user.name, userRole: user.role, token });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
