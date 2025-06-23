@@ -28,7 +28,7 @@ tags:
 # PATHS
 # ===============================================================
 paths:
-  /auth/register:
+  /api/auth/register:
     post:
       tags: [Auth]
       summary: Register a new user
@@ -53,7 +53,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /auth/login:
+  /api/auth/login:
     post:
       tags: [Auth]
       summary: Login a user
@@ -88,7 +88,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /users:
+  /api/users:
     get:
       tags: [Users]
       summary: Get all users
@@ -104,7 +104,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
 
-  /users/{id}:
+  /api/users/{id}:
     get:
       tags: [Users]
       summary: Get user by ID
@@ -157,7 +157,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /orders:
+  /api/orders:
     post:
       tags: [Orders]
       summary: Create a new order with items
@@ -202,7 +202,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Order'
 
-  /orders/{id}:
+  /api/orders/{id}:
     get:
       tags: [Orders]
       summary: Get order by ID
@@ -220,7 +220,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /payment/create_payment_url:
+  /api/payment/create_payment_url:
     post:
       tags: [Payments]
       summary: Create a VNPAY payment URL
@@ -314,7 +314,7 @@ paths:
                     type: string
                     example: "Order not found"
 
-  /payment/stats:
+  /api/payment/stats:
     get:
       tags: [Payments]
       summary: Get payment statistics
@@ -354,7 +354,7 @@ paths:
                         description: "Total amount of successful payments"
                         example: 15000000
 
-  /payment:
+  /api/payment:
     get:
       tags: [Payments]
       summary: Get all payments with pagination
@@ -408,7 +408,7 @@ paths:
                         type: integer
                         example: 10
 
-  /payment/{id}:
+  /api/payment/{id}:
     get:
       tags: [Payments]
       summary: Get payment by ID
@@ -441,7 +441,7 @@ paths:
                     type: string
                     example: "Payment not found"
 
-  /payment/vnpay_return:
+  /api/payment/vnpay_return:
     get:
       tags: [Payments]
       summary: VNPAY callback endpoint
@@ -509,7 +509,7 @@ paths:
                     type: string
                     example: "07"
 
-  /categories:
+  /api/categories:
     get:
       tags: [Categories]
       summary: Get all categories
@@ -544,7 +544,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /categories/{id}:
+  /api/categories/{id}:
     get:
       tags: [Categories]
       summary: Get category by ID
@@ -595,7 +595,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /products:
+  /api/products:
     get:
       tags: [Products]
       summary: Get all products
@@ -630,7 +630,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /products/{id}:
+  /api/products/{id}:
     get:
       tags: [Products]
       summary: Get product by ID
@@ -681,7 +681,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /reviews:
+  /api/reviews:
     get:
       tags: [Reviews]
       summary: Get reviews by product ID
@@ -723,7 +723,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /reviews/{id}:
+  /api/reviews/{id}:
     get:
       tags: [Reviews]
       summary: Get review by ID
@@ -774,7 +774,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /carts:
+  /api/carts:
     get:
       tags: [Carts]
       summary: Get all carts
@@ -811,7 +811,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /carts/{id}:
+  /api/carts/{id}:
     get:
       tags: [Carts]
       summary: Get cart by ID
@@ -864,7 +864,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /carts/{id}/cart-items:
+  /api/carts/{id}/cart-items:
     get:
       tags: [Carts]
       summary: Get all items in a cart
@@ -905,7 +905,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /carts/{cart_id}/cart-items/{item_id}:
+  /api/carts/{cart_id}/cart-items/{item_id}:
     put:
       tags: [Carts]
       summary: Update a cart item
@@ -964,7 +964,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /admin-logs:
+  /api/admin-logs:
     get:
       tags: [AdminLogs]
       summary: Get all admin logs
@@ -1001,7 +1001,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidInput'
 
-  /admin-logs/{id}:
+  /api/admin-logs/{id}:
     get:
       tags: [AdminLogs]
       summary: Get admin log by ID

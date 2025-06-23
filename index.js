@@ -20,6 +20,7 @@ const chatbotSessionRoutes = require('./routes/chatbotSessionRoute');
 const contentRoutes = require('./routes/contentRoute');
 const financialReportRoutes = require('./routes/financialReportRoute');
 const inventoryAlertRoutes = require('./routes/inventoryAlertRoute');
+const path = require('path');
 
 // Thiết lập associations
 // const models = require('./models/associations');
@@ -28,7 +29,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // Cấu hình Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customJs: '/swagger-custom.js'
+}));
+app.use('/swagger-custom.js', express.static(path.join(__dirname, 'swagger-custom.js')));
 // Cấu hình các route
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
