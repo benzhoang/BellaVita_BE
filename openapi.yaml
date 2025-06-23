@@ -3,11 +3,7 @@ info:
   title: BellaVita API
   version: 1.0.0
   description: "API documentation for the BellaVita e-commerce project. This API handles user management, product catalog, orders, payments, and more."
-servers:
-  - url: http://localhost:3000/api
-    description: Local development server
-  - url: https://bellavita-be.onrender.com
-    description: Production server
+servers: []
 tags:
   - name: Auth
     description: Authentication endpoints
