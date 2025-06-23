@@ -30,9 +30,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // Cấu hình Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
-  customJs: '/swagger-custom.js'
+  customJs: '/configs/swagger-custom.js'
 }));
-app.use('/swagger-custom.js', express.static(path.join(__dirname, 'swagger-custom.js')));
+app.use('/configs/swagger-custom.js', express.static(path.join(__dirname, 'configs/swagger-custom.js')));
 // Cấu hình các route
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
