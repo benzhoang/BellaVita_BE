@@ -6,6 +6,8 @@ info:
 servers:
   - url: http://localhost:3000/api
     description: Local development server
+  - url: https://bellavita-be.onrender.com
+    description: Production server
 tags:
   - name: Auth
     description: Authentication endpoints
