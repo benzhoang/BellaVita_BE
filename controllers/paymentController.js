@@ -24,10 +24,31 @@ const PaymentController = {
   // Lấy payment theo ID
   getPaymentById: async (req, res) => {
     try {
-      const payment = await Payment.findByPk(req.params.id);
+      const paymentId = req.params.id;
+      const currentUserId = req.user.user_id;
+      const userRole = req.user.role;
+
+      const payment = await Payment.findByPk(paymentId);
       if (!payment) {
         return res.status(404).json({ success: false, error: 'Payment not found' });
       }
+
+      // 🔒 Kiểm tra quyền truy cập
+      if (userRole !== 'admin') {
+        // User thường: kiểm tra payment có thuộc về user không
+        const order = await Order.findByPk(payment.order_id);
+        if (!order || order.user_id !== currentUserId) {
+          console.log('❌ BẢO MẬT: User không có quyền xem payment này');
+          console.log('  - Payment Order ID:', payment.order_id);
+          console.log('  - Order User ID:', order?.user_id);
+          console.log('  - Current User ID:', currentUserId);
+          return res.status(403).json({ 
+            success: false, 
+            error: 'Access denied: You can only view your own payments' 
+          });
+        }
+      }
+
       res.json({ success: true, payment });
     } catch (error) {
       console.error("❌ Lỗi lấy payment:", error);
@@ -60,8 +81,16 @@ const PaymentController = {
         return res.status(400).json({ success: false, error: 'Order ID is required' });
       }
 
+      // 🔒 Kiểm tra user đã đăng nhập chưa
+      if (!req.user || !req.user.user_id) {
+        return res.status(401).json({ success: false, error: 'Authentication required' });
+      }
+
+      const currentUserId = req.user.user_id;
+
       console.log('=== TẠO URL THANH TOÁN VNPAY ===');
       console.log('Order ID:', orderId);
+      console.log('Current User ID:', currentUserId);
       console.log('Bank Code:', bankCode);
       console.log('IP Address:', ipAddr);
 
@@ -69,6 +98,17 @@ const PaymentController = {
       const order = await Order.findByPk(orderId);
       if (!order) {
         return res.status(404).json({ success: false, error: 'Order not found' });
+      }
+
+      // 🔒 Kiểm tra order có thuộc về user đang đăng nhập không
+      if (order.user_id !== currentUserId) {
+        console.log('❌ BẢO MẬT: User không có quyền thanh toán order này');
+        console.log('  - Order User ID:', order.user_id);
+        console.log('  - Current User ID:', currentUserId);
+        return res.status(403).json({ 
+          success: false, 
+          error: 'Access denied: This order does not belong to you' 
+        });
       }
 
       // 2. Kiểm tra order đã thanh toán chưa
@@ -80,6 +120,7 @@ const PaymentController = {
       const amount = order.total_amount;
       console.log('Order Amount:', amount);
       console.log('Order Status:', order.status);
+      console.log('✅ Bảo mật: Order thuộc về user hiện tại');
 
       // 4. Tạo một bản ghi thanh toán mới trong CSDL với trạng thái chờ
       const newPayment = await Payment.create({
