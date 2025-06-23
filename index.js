@@ -32,7 +32,7 @@ app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customJs: '/configs/swagger-custom.js'
 }));
-app.use('/configs/swagger-custom.js', express.static(path.join(__dirname, 'configs/swagger-custom.js')));
+app.use('/configs/swagger-custom.js', express.static(path.join(__dirname, '/configs/swagger-custom.js')));
 // Cấu hình các route
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
