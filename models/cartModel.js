@@ -7,7 +7,7 @@ const Cart = sequelize.define('Cart', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: DataTypes.INTEGER,
+  user_id: DataTypes.UUID,
   status: DataTypes.BOOLEAN,
 }, {
   tableName: 'carts',

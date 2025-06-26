@@ -34,6 +34,26 @@ const OrderController = {
     }
   },
 
+  // Lấy đơn hàng theo user_id
+  getOrderByUserId: async (req, res) => {
+    try {
+      const orders = await Order.findAll({ where: { user_id: req.params.user_id } });
+      if (!orders) return res.status(404).json({ error: 'No orders found for this user' });
+
+      // Lấy các order item theo order_id
+      const ordersWithItems = await Promise.all(
+        orders.map(async (order) => {
+          const orderItems = await OrderItem.findAll({ where: { order_id: order.order_id } });
+          return { ...order.toJSON(), orderItems };
+        })
+      );
+
+      res.json(ordersWithItems);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+
   // Tạo đơn hàng mới
   createOrder: async (req, res) => {
     try {

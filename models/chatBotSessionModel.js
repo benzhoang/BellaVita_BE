@@ -7,7 +7,7 @@ const ChatbotSession = sequelize.define('ChatbotSession', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: DataTypes.INTEGER,
+  user_id: DataTypes.UUID,
   skin_type: DataTypes.STRING(50),
   recommendation: DataTypes.TEXT,
   routine: DataTypes.TEXT,
