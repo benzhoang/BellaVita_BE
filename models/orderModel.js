@@ -7,7 +7,7 @@ const Order = sequelize.define('Order', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: DataTypes.INTEGER,
+  user_id: DataTypes.UUID,
   status: DataTypes.BOOLEAN,
   payment_method: DataTypes.STRING(50),
   total_amount: DataTypes.DECIMAL(10, 2),

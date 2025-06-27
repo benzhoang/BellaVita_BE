@@ -6,6 +6,7 @@ const { authenticateToken, authorizeRole } = require('../middlewares/autheticati
 
 router.get('/', authenticateToken, OrderController.getAllOrders);
 router.get('/:id', authenticateToken, OrderController.getOrderById);
+router.get('/user/:user_id', authenticateToken, OrderController.getOrderByUserId);
 router.post('/', authenticateToken, OrderController.createOrder);
 router.put('/:id', authenticateToken, OrderController.updateOrder);
 router.delete('/:id', authenticateToken, OrderController.deleteOrder);

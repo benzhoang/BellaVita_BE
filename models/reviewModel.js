@@ -7,7 +7,7 @@ const Review = sequelize.define('Review', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: DataTypes.INTEGER,
+  user_id: DataTypes.UUID,
   product_id: DataTypes.INTEGER,
   rating: DataTypes.INTEGER,
   comment: DataTypes.TEXT,
