@@ -177,7 +177,6 @@ paths:
                   quantity: 2
                 - product_id: 2
                   quantity: 1
-                  price: 55000
       responses:
         '201':
           description: Order created successfully
@@ -358,6 +357,8 @@ paths:
       tags: [Payments]
       summary: Create a VNPAY payment URL
       description: "Creates a VNPAY payment URL. Amount is automatically retrieved from the order in database."
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
