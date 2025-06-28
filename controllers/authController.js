@@ -14,7 +14,7 @@ const AuthController = {
       if (!valid) return res.status(401).json({ message: 'Sai mật khẩu' });
 
       const token = jwt.sign(
-        { id: user.id, role: user.role },
+        { user_id: user.user_id, role: user.role },
         process.env.JWT_SECRET || 'secret_key',
         { expiresIn: '1d' }
       );
