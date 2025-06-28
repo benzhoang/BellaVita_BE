@@ -23,8 +23,18 @@ const OrderController = {
   // Lấy đơn hàng theo id
   getOrderById: async (req, res) => {
     try {
-      const order = await Order.findByPk(req.params.id);
-      if (!order) return res.status(404).json({ error: 'Order not found' });
+      const { id } = req.params;
+      const user_id = req.user.user_id; // Lấy user_id từ JWT token
+
+      const order = await Order.findByPk(id);
+      if (!order) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+
+      // Kiểm tra xem đơn hàng có thuộc về user này không
+      if (order.user_id != user_id) {
+        return res.status(403).json({ error: 'Access denied. You can only view your own orders.' });
+      }
 
       // Lấy các order item theo order_id
       const orderItems = await OrderItem.findAll({ where: { order_id: order.order_id } });
