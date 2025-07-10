@@ -16,10 +16,10 @@ const adminLogRoute = require('./routes/adminLogRoute');
 const authRoutes = require('./routes/authRoute');
 const paymentRoutes = require('./routes/paymentRoute');
 const adCampaignRoutes = require('./routes/adCampaignRoute');
-const chatbotSessionRoutes = require('./routes/chatbotSessionRoute');
 const contentRoutes = require('./routes/contentRoute');
 const financialReportRoutes = require('./routes/financialReportRoute');
 const inventoryAlertRoutes = require('./routes/inventoryAlertRoute');
+const aiRoutes = require('./routes/aiRoute');
 
 // Thiết lập associations
 // const models = require('./models/associations');
@@ -40,10 +40,10 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/admin-logs', adminLogRoute);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/ad-campaigns', adCampaignRoutes);
-app.use('/api/chatbot-sessions', chatbotSessionRoutes);
 app.use('/api/contents', contentRoutes);
 app.use('/api/financial-reports', financialReportRoutes);
 app.use('/api/inventory-alerts', inventoryAlertRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Route giới thiệu về BE server và link Swagger
 app.get('/', (req, res) => {
