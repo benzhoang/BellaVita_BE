@@ -105,6 +105,25 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
+    post:
+      tags: [Users]
+      summary: Create a new user
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: User data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
 
   /api/users/{id}:
     get:
@@ -1348,7 +1367,7 @@ components:
           format: email
         role:
           type: string
-          enum: [user, admin]
+          enum: [customer, manager, admin, staff]
         status:
           type: boolean
         createdAt:
