@@ -176,7 +176,11 @@ const OrderController = {
     try {
       const order = await Order.findByPk(req.params.id);
       if (!order) return res.status(404).json({ error: 'Order not found' });
-      await order.update(req.body);
+      // Chỉ cho phép cập nhật status và payment_method
+      const allowedFields = {};
+      if (typeof req.body.status !== 'undefined') allowedFields.status = req.body.status;
+      if (typeof req.body.payment_method !== 'undefined') allowedFields.payment_method = req.body.payment_method;
+      await order.update(allowedFields);
       res.json(order);
     } catch (err) {
       res.status(400).json({ error: err.message });
