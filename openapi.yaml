@@ -239,6 +239,32 @@ paths:
                 $ref: "#/components/schemas/Order"
         "404":
           $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Orders]
+      summary: Update an order (only status and payment_method allowed)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        description: Only status and payment_method can be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderUpdateInput"
+            example:
+              status: true
+              payment_method: "CASH"
+      responses:
+        "200":
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /api/orders/{id}/order-items:
     get:
@@ -1695,3 +1721,14 @@ components:
         createdAt:
           type: string
           format: date-time
+
+    OrderUpdateInput:
+      type: object
+      properties:
+        status:
+          type: boolean
+        payment_method:
+          type: string
+      required:
+        - status
+        - payment_method
